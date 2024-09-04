@@ -1,0 +1,52 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Images</title>
+</head>
+<body>
+  
+
+    {% for product in imagenes %}
+    <h1>{{ product.name }}</h1>
+    
+        <img src="{{ product.imagen.url }}" alt="Image for {{ product.name }}">
+
+        <form method="post">
+            {% csrf_token %}
+            
+            {{ pregunta_form.as_p }}
+            <button type="submit">Enviar respuesta</button>
+        </form>
+
+    {% endfor %}
+
+<div class="pagination">
+    <span class=" step-links">
+        {% if imagenes.has_previous %}
+            <a href="?page=1">&laquo; first </a>
+            <a href="?page={{ imagenes.previous_page_number }}" > previous</a>
+        {% endif %}
+
+        <span class= "current">
+            Page {{ imagenes.number }} of {{ imagenes.paginator.num_pages}} .
+            
+        </span>
+
+        {% if imagenes.has_next %}
+            <a href="?page={{ imagenes.next_page_number }}" > next</a>
+            <a href="?page={{ imagenes.paginator.num_pages }}"> last &raquo;</a>
+        {% endif %}
+
+    </span>
+</div>
+
+</body>
+</html>
+</body>
+</html>
+
+{% endblock %}
+

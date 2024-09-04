@@ -1,0 +1,12 @@
+{% extends 'polls/base.html' %}
+{% block content %}
+<h1> Crea tu pregunta!  </h1>
+
+<form method="POST"> 
+    {% csrf_token %}
+    {{form}}
+    <button>
+        Save
+    </button>
+</form>
+{% endblock %}

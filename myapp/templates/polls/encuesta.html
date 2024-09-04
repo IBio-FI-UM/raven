@@ -1,0 +1,17 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+<h1></h1>
+
+<img src="{{ imagen.imagen.url }}" alt="Image for {{ imagen.name }}">
+
+<form method="POST">
+    {% csrf_token %}
+    
+    {{ respuesta_form.as_p }}
+    <button type="submit">Enviar respuesta</button>
+</form>
+
+{% endblock %}
+
+     

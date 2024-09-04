@@ -1,0 +1,18 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<form method="POST">
+    {% csrf_token %}
+    {{user.as_p}}
+    <button>
+        Save  
+    </button>
+</form>
+    <h1>  Hola!!</h1>
+    <img src= "{% static 'perrito1.jpg' %}" alt="300" width="300">
+    <h1> Bienvenidos </h1>
+
+{% endblock %}
+
