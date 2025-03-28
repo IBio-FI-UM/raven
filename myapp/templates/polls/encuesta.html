@@ -2,8 +2,24 @@
 
 {% block content %}
 <h1></h1>
+<h1> Usuario: {{ usuario_nombre }}</h1> 
+
+
+
+{% if imagen.name|first == "C" %}
+<h1>Sección C</h1> 
+{% elif imagen.name|first == "D" %}
+<h1>Sección D</h1>
+{% elif imagen.name|first == "E" %}
+<h1>Sección E</h1>
+{% else %}
+<h1> </h1>
+{% endif %}
+
 
 <img src="{{ imagen.imagen.url }}" alt="Image for {{ imagen.name }}">
+
+
 
 <form method="POST">
     {% csrf_token %}

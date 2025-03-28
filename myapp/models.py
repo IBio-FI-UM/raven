@@ -32,13 +32,12 @@ class Imagen(models.Model):
         return self.name
     
 class  Pregunta(models.Model):
-    respuesta=models.CharField(max_length=200)
+    usuario_nombre= models.CharField(max_length=255, blank=True ,null=True)
+    respuesta = models.IntegerField(choices=[(i, str(i)) for i in range(1, 9)])
     imagen= models.ForeignKey(Imagen, on_delete=models.CASCADE,null=True, blank=True)   
     #codigo= models.ForeignKey(Usuario, on_delete=models.CASCADE)
     def __str__(self):
-        return self.respuesta
-
-
+        return  f"{self.usuario_nombre}: {self.respuesta}"
 
 
 

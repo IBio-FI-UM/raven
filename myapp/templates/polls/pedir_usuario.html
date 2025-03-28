@@ -1,0 +1,13 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+{% block content %}
+
+<img src= "{% static 'ins.png' %}" alt="600" width="600">
+<form method="POST">
+    {% csrf_token %}
+    <label for="usuario_nombre">Ingresa tu nombre:</label>
+    <input type="text" name="usuario_nombre" required>
+    <button type="submit">Iniciar</button>
+</form>
+{% endblock %}
+

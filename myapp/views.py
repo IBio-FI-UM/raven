@@ -7,6 +7,7 @@ from django.views  import generic
 from .forms import CreateNewUser, CreateNewQuestion, UsuarioForm
 from django.utils import timezone
 from django.core.paginator import Paginator
+from django.urls import reverse
 
 class indexVIew(generic.ListView):
     template_name = "polls/detail.html"
@@ -45,8 +46,34 @@ from django.shortcuts import render, redirect
 from .models import Imagen
 from .forms import PreguntaForm  
 
-def encuesta(request,reiniciar=False):
-    if reiniciar or 'imagen_actual' not in request.session:
+def pedir_usuario(request):
+    if request.method == 'POST':
+        usuario_nombre = request.POST.get("usuario_nombre")
+        if usuario_nombre:
+            request.session['usuario_nombre'] = usuario_nombre  # Guardar en la sesión
+            print(f"Usuario guardado en la sesión: {usuario_nombre}")  # Verificar en el log
+            return redirect('encuesta/') 
+         
+    request.session['imagen_actual'] = 1    
+    return render(request, 'polls/pedir_usuario.html') 
+
+
+
+def reiniciar_encuesta(request):
+    request.session.flush()
+    return redirect('pedir_usuario')  
+
+
+
+def encuesta(request, reiniciar=False):
+    if reiniciar or 'usuario_nombre' not in request.session:
+        request.session.flush()  # Borrar solo el nombre de usuario
+        return render(request, 'polls/pedir_usuario.html')  # Página para ingresar el usuario
+
+    # Obtener el nombre del usuario desde la sesión
+    usuario_nombre = request.session['usuario_nombre']
+
+    if 'imagen_actual' not in request.session:
         
         imagenes = Imagen.objects.all()
         if imagenes:
@@ -59,10 +86,13 @@ def encuesta(request,reiniciar=False):
     imagen_actual = Imagen.objects.get(pk=imagen_actual_id)
     
     if request.method == 'POST':
+        
+       
         respuesta_form = PreguntaForm(request.POST)  
         if respuesta_form.is_valid():
             respuesta = respuesta_form.save(commit=False)
             respuesta.imagen = imagen_actual  
+            respuesta.usuario_nombre = usuario_nombre  #Asignar el usuario desde la sesión
             respuesta.save()
             
          
@@ -71,12 +101,18 @@ def encuesta(request,reiniciar=False):
             if siguiente_imagen:
                 request.session['imagen_actual'] = siguiente_id
                 return redirect('.')
+            
             else:
-                return redirect ('reiniciar/')
+                return redirect(('reiniciar_encuesta/'))
     else:
         respuesta_form = PreguntaForm()
+        
+        
     
-    return render(request, 'polls/encuesta.html', {'imagen': imagen_actual, 'respuesta_form': respuesta_form})
+    return render(request, 'polls/encuesta.html', {'imagen': imagen_actual, 'respuesta_form': respuesta_form, 'usuario_nombre': usuario_nombre })
+
+
+
 
 
 
